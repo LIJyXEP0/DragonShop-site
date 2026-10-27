@@ -13,6 +13,8 @@ const PRODUCTS = [
 ];
 
 const tg = window.Telegram?.WebApp;
+// Public HTTPS API on the DragonShop VM; the bot validates Telegram initData server-side.
+const API_BASE_URL = "https://129.151.199.231";
 const money = (cents) => new Intl.NumberFormat("ru-LV", { style: "currency", currency: "EUR" }).format(cents / 100);
 const byId = (id) => document.getElementById(id);
 const CART_STORAGE_KEY = `dragon-shop:cart:v1:${tg?.initDataUnsafe?.user?.id || "browser"}`;
@@ -125,27 +127,63 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 1900);
 }
 
-function submitOrder(paymentMethod) {
+async function submitOrder(paymentMethod) {
   const items = [...cart.entries()].map(([id, quantity]) => ({ id, quantity }));
   if (!items.length) return;
   if (!byId("age-confirmed").checked) {
     showToast("Подтвердите, что вам исполнилось 18 лет.");
     return;
   }
-  const payload = JSON.stringify({ type: "order", payment_method: paymentMethod, age_confirmed: true, items });
-
-  if (!tg) {
+  if (!tg?.initData) {
     showToast("Для отправки заказа откройте магазин в Telegram.");
     return;
   }
 
-  tg.HapticFeedback?.impactOccurred("light");
-  tg.sendData(payload);
+  const buttons = [byId("pay-card"), byId("pay-cash")];
+  buttons.forEach((button) => { button.disabled = true; });
+  try {
+    await sendToBot({ type: "order", payment_method: paymentMethod, age_confirmed: true, items });
+    tg.HapticFeedback?.impactOccurred("light");
+    showToast("Заявка передана менеджеру");
+  } catch (error) {
+    showToast(error.message || "Не удалось отправить заявку. Попробуйте ещё раз.");
+    return;
+  } finally {
+    buttons.forEach((button) => { button.disabled = !byId("age-confirmed").checked; });
+  }
+
   cart.clear();
   saveCart();
   renderCart();
   byId("checkout-dialog").close();
   setCartOpen(false);
+}
+
+async function sendToBot(payload) {
+  if (!tg?.initData) throw new Error("Откройте магазин через кнопку в Telegram.");
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}/api/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Telegram-Init-Data": tg.initData,
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    throw new Error("Сервер временно недоступен. Проверьте интернет и попробуйте ещё раз.");
+  }
+  let result;
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error("Сервер вернул некорректный ответ. Попробуйте позже.");
+  }
+  if (!response.ok || !result.ok) {
+    throw new Error(result.error || "Не удалось передать данные. Попробуйте ещё раз.");
+  }
+  return result;
 }
 
 function resetCatalogFilters() {
@@ -218,7 +256,7 @@ byId("review-text").addEventListener("input", (event) => {
   byId("review-length").textContent = event.target.value.length;
 });
 
-byId("send-review").addEventListener("click", () => {
+byId("send-review").addEventListener("click", async () => {
   const text = byId("review-text").value.trim();
   if (selectedRating < 1 || selectedRating > 5) {
     showToast("Поставьте оценку от 1 до 5");
@@ -228,7 +266,17 @@ byId("send-review").addEventListener("click", () => {
     showToast("Напишите отзыв хотя бы из 5 символов");
     return;
   }
-  tg.sendData(JSON.stringify({ type: "review", rating: selectedRating, text }));
+  const button = byId("send-review");
+  button.disabled = true;
+  try {
+    await sendToBot({ type: "review", rating: selectedRating, text });
+  } catch (error) {
+    showToast(error.message || "Не удалось отправить отзыв. Попробуйте ещё раз.");
+    return;
+  } finally {
+    button.disabled = false;
+  }
+  showToast("Спасибо! Отзыв отправлен");
   reviewDialog.close();
   byId("review-text").value = "";
   byId("review-length").textContent = "0";
