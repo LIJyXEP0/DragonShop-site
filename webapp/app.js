@@ -1,15 +1,15 @@
 const PRODUCTS = [
-  { id: "dumbum-2g-p5du13", name: "Dumbum 2G+ P5DU13", category: "F2", priceCents: 1200, image: "images/dumbum-2g-p5du13.webp" },
-  { id: "rc3-pxp203", name: "RC3 PXP203", category: "F1", priceCents: 700, image: "images/rc3-pxp203.webp" },
-  { id: "dumbum-micro-p2d", name: "Dumbum Micro P2D", category: "F1", priceCents: 500, image: "images/dumbum-micro-p2d.webp" },
-  { id: "dumbum-middle-red-p6a13", name: "Dumbum Middle P6A13(R)", category: "F2", priceCents: 1800, image: "images/dumbum-middle-red-p6a13.webp" },
-  { id: "fp3-small-jc05", name: "FP3 Small JC05", category: "F1", priceCents: 1200, image: "images/fp3-small-jc05.webp" },
-  { id: "tp2l", name: "TP2L", category: "F2", priceCents: 1300, image: "images/tp2l.webp" },
-  { id: "viper-black-p5d13", name: "Viper Black P5D13", category: "F2", priceCents: 1500, image: "images/viper-black-p5d13.webp" },
-  { id: "zombum-original-zb101", name: "Zom Bum Original ZB101", category: "F2", priceCents: 1200, image: "images/zombum-original-zb101.webp" },
-  { id: "zb600-zombie-attack", name: "ZB600 ZOMBIE ATTACK 5G", category: "F3", priceCents: 2500, image: "images/zb600-zombie-attack.webp" },
-  { id: "rc1-pxp201", name: "RC1 PXP201", category: "F1", priceCents: 400, image: "images/rc1-pxp201.webp" },
-  { id: "dumbum-middle-green-p6a13", name: "Dumbum Middle P6A13(G)", category: "F2", priceCents: 1800, image: "images/dumbum-middle-green-p6a13.webp" },
+  { id: "dumbum-2g-p5du13", name: "Dumbum 2G+ P5DU13", priceCents: 1200, image: "images/dumbum-2g-p5du13.webp" },
+  { id: "rc3-pxp203", name: "RC3 PXP203", priceCents: 700, image: "images/rc3-pxp203.webp" },
+  { id: "dumbum-micro-p2d", name: "Dumbum Micro P2D", priceCents: 500, image: "images/dumbum-micro-p2d.webp" },
+  { id: "dumbum-middle-red-p6a13", name: "Dumbum Middle P6A13(R)", priceCents: 1800, image: "images/dumbum-middle-red-p6a13.webp" },
+  { id: "fp3-small-jc05", name: "FP3 Small JC05", priceCents: 1200, image: "images/fp3-small-jc05.webp" },
+  { id: "tp2l", name: "TP2L", priceCents: 1300, image: "images/tp2l.webp" },
+  { id: "viper-black-p5d13", name: "Viper Black P5D13", priceCents: 1500, image: "images/viper-black-p5d13.webp" },
+  { id: "zombum-original-zb101", name: "Zom Bum Original ZB101", priceCents: 1200, image: "images/zombum-original-zb101.webp" },
+  { id: "zb600-zombie-attack", name: "ZB600 ZOMBIE ATTACK 5G", priceCents: 2500, image: "images/zb600-zombie-attack.webp" },
+  { id: "rc1-pxp201", name: "RC1 PXP201", priceCents: 400, image: "images/rc1-pxp201.webp" },
+  { id: "dumbum-middle-green-p6a13", name: "Dumbum Middle P6A13(G)", priceCents: 1800, image: "images/dumbum-middle-green-p6a13.webp" },
 ];
 
 const tg = window.Telegram?.WebApp;
@@ -17,8 +17,6 @@ const money = (cents) => new Intl.NumberFormat("ru-LV", { style: "currency", cur
 const byId = (id) => document.getElementById(id);
 const CART_STORAGE_KEY = `dragon-shop:cart:v1:${tg?.initDataUnsafe?.user?.id || "browser"}`;
 const MAX_PRICE_EUROS = Math.ceil(Math.max(...PRODUCTS.map((product) => product.priceCents)) / 100);
-let activeCategory = "all";
-
 byId("price-min").max = MAX_PRICE_EUROS;
 byId("price-max").max = MAX_PRICE_EUROS;
 byId("price-max").value = MAX_PRICE_EUROS;
@@ -54,10 +52,9 @@ function renderProducts() {
   const minCents = minRaw === "" ? 0 : Math.max(0, Math.round(Number(minRaw) * 100));
   const maxCents = maxRaw === "" ? MAX_PRICE_EUROS * 100 : Math.max(0, Math.round(Number(maxRaw) * 100));
   const invalidRange = minCents > maxCents;
-  let visibleProducts = invalidRange ? [] : PRODUCTS.filter((product) => {
-    const categoryMatches = activeCategory === "all" || product.category === activeCategory;
-    return categoryMatches && product.priceCents >= minCents && product.priceCents <= maxCents;
-  });
+  let visibleProducts = invalidRange ? [] : PRODUCTS.filter((product) =>
+    product.priceCents >= minCents && product.priceCents <= maxCents
+  );
 
   const sortMode = byId("sort-price").value;
   if (sortMode === "price-asc") visibleProducts.sort((a, b) => a.priceCents - b.priceCents);
@@ -77,12 +74,11 @@ function renderProducts() {
     return `
     <article class="product-card">
       <div class="product-visual">
-        <span class="product-tag">${product.category}</span>
         <img class="product-image" src="${product.image}" alt="${product.name}" loading="lazy" />
         <span class="product-index">${String(index + 1).padStart(2, "0")} / ${String(PRODUCTS.length).padStart(2, "0")}</span>
       </div>
       <div class="product-info">
-        <div><p class="product-name">${product.name}</p><p class="product-type">КАТЕГОРИЯ ${product.category}</p></div>
+        <div><p class="product-name">${product.name}</p></div>
         <span class="product-price">${money(product.priceCents)}</span>
       </div>
       <button class="add-button" type="button" data-add="${product.id}" aria-label="Добавить: ${product.name}">В корзину <span>+</span></button>
@@ -155,29 +151,11 @@ function submitOrder(paymentMethod) {
 }
 
 function resetCatalogFilters() {
-  activeCategory = "all";
   byId("price-min").value = 0;
   byId("price-max").value = MAX_PRICE_EUROS;
   byId("sort-price").value = "featured";
-  document.querySelectorAll("[data-category-filter]").forEach((button) => {
-    const selected = button.dataset.categoryFilter === "all";
-    button.classList.toggle("is-active", selected);
-    button.setAttribute("aria-pressed", String(selected));
-  });
   renderProducts();
 }
-
-document.querySelectorAll("[data-category-filter]").forEach((button) => {
-  button.addEventListener("click", () => {
-    activeCategory = button.dataset.categoryFilter;
-    document.querySelectorAll("[data-category-filter]").forEach((chip) => {
-      const selected = chip === button;
-      chip.classList.toggle("is-active", selected);
-      chip.setAttribute("aria-pressed", String(selected));
-    });
-    renderProducts();
-  });
-});
 
 byId("price-min").addEventListener("input", renderProducts);
 byId("price-max").addEventListener("input", renderProducts);
