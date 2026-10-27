@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c090b" />
+    <meta name="description" content="Каталог пиротехнических изделий DragonShop." />
+    <title>DragonShop — каталог пиротехники</title>
+    <link rel="icon" type="image/jpeg" href="images/dragonshop-logo.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js?64"></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="DragonShop — на главную">
+          <span class="brand-mark" aria-hidden="true"><img src="images/dragonshop-logo.jpg" alt="" /></span>
+          <span>DRAGON<span class="brand-accent">SHOP</span></span>
+        </a>
+        <button class="cart-trigger" id="open-cart" type="button" aria-label="Открыть корзину">
+          <span class="cart-icon" aria-hidden="true">▱</span>
+          <span class="cart-label">Корзина</span>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </header>
+
+      <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="status-dot"></span> HALLOWEEN EDITION</p>
+            <h1 id="hero-title">Ночь<br /><span>дракона.</span></h1>
+            <p class="hero-description">Каталог изделий категорий F1–F3. Каждая заявка проверяется менеджером до продажи.</p>
+            <a class="hero-link" href="#catalog">Открыть каталог <span aria-hidden="true">↘</span></a>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="hero-orbit orbit-one"></div>
+            <div class="hero-orbit orbit-two"></div>
+            <div class="hero-web"></div>
+            <div class="hero-dragon">龍</div>
+            <div class="hero-emblem">
+              <img class="hero-logo" src="images/dragonshop-logo.jpg" alt="" />
+              <span class="emblem-label">DRAGON · AFTER DARK</span>
+              <span class="emblem-star">✦</span>
+            </div>
+            <span class="hero-pumpkin" aria-hidden="true">🎃</span>
+            <span class="hero-bat" aria-hidden="true">☾</span>
+            <span class="hero-side-note">КАТЕГОРИИ<br />F1 · F2 · F3</span>
+            <span class="hero-number">11</span>
+          </div>
+          <div class="hero-bottom"><span>ПЕРЕДАЧА ПОСЛЕ ПРОВЕРКИ</span><span>D · S / 2026</span></div>
+        </section>
+
+        <section class="catalog section-wrap" id="catalog" aria-labelledby="catalog-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">КАТАЛОГ</p><h2 id="catalog-title">Каталог<span>.</span></h2></div>
+            <span class="product-total" id="product-total">11 / 11 ПОЗИЦИЙ</span>
+          </div>
+          <div class="catalog-filters" aria-label="Фильтры каталога">
+            <div class="filter-topline">
+              <p class="filter-heading"><span class="filter-sparkle" aria-hidden="true">✦</span> НАЙДИ СВОЙ ВАРИАНТ</p>
+              <p class="filter-results" id="filter-results" aria-live="polite">Показаны все товары</p>
+            </div>
+            <div class="category-filters" role="group" aria-label="Фильтр по категории">
+              <button class="category-chip is-active" type="button" data-category-filter="all" aria-pressed="true">Все категории</button>
+              <button class="category-chip" type="button" data-category-filter="F1" aria-pressed="false">F1</button>
+              <button class="category-chip" type="button" data-category-filter="F2" aria-pressed="false">F2</button>
+              <button class="category-chip" type="button" data-category-filter="F3" aria-pressed="false">F3</button>
+            </div>
+            <div class="filter-controls">
+              <div class="price-filter">
+                <span class="filter-control-label">ЦЕНА, €</span>
+                <div class="price-inputs">
+                  <label class="price-field"><span>от</span><input id="price-min" type="number" min="0" step="1" value="0" inputmode="decimal" aria-label="Минимальная цена в евро" /></label>
+                  <span class="price-divider" aria-hidden="true">—</span>
+                  <label class="price-field"><span>до</span><input id="price-max" type="number" min="0" step="1" value="25" inputmode="decimal" aria-label="Максимальная цена в евро" /></label>
+                </div>
+              </div>
+              <label class="sort-filter" for="sort-price">
+                <span>СОРТИРОВКА</span>
+                <select id="sort-price">
+                  <option value="featured">По умолчанию</option>
+                  <option value="price-asc">Сначала дешевле</option>
+                  <option value="price-desc">Сначала дороже</option>
+                </select>
+              </label>
+              <button class="filter-reset" id="reset-filters" type="button">Сбросить <span aria-hidden="true">↺</span></button>
+            </div>
+          </div>
+          <div class="product-grid" id="product-grid" aria-live="polite"></div>
+          <div class="filter-empty" id="filter-empty" hidden>
+            <span aria-hidden="true">☾</span>
+            <p>В этом диапазоне товаров нет.</p>
+            <button type="button" id="empty-reset">Сбросить фильтры</button>
+          </div>
+        </section>
+
+        <section class="city-note section-wrap">
+          <span class="city-mark" aria-hidden="true">DS</span>
+          <p>Заявка менеджеру.<br /><strong>Передача после проверки.</strong></p>
+          <span class="city-coordinate">МЕСТО ПЕРЕДАЧИ<br />СОГЛАСУЕТ МЕНЕДЖЕР</span>
+        </section>
+
+        <section class="reviews-section section-wrap" aria-labelledby="reviews-title">
+          <div class="reviews-card">
+            <div class="reviews-copy">
+              <p class="eyebrow">СООБЩЕСТВО DRAGONSHOP</p>
+              <h2 id="reviews-title">Есть отзыв<span>?</span></h2>
+              <p>Поделитесь впечатлением — сообщение попадёт команде DragonShop.</p>
+            </div>
+            <button class="review-open-button" id="open-review" type="button">Оставить отзыв <span>↗</span></button>
+            <span class="reviews-decoration" aria-hidden="true">✦</span>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer section-wrap"><span>© DRAGONSHOP 2026</span><span>КАТЕГОРИИ F1–F3</span></footer>
+    </div>
+
+    <div class="overlay" id="overlay" hidden></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-labelledby="cart-title" aria-hidden="true">
+      <div class="drawer-heading">
+        <div><p class="eyebrow">ТВОЙ ВЫБОР</p><h2 id="cart-title">Корзина<span>.</span></h2></div>
+        <button class="icon-button" id="close-cart" type="button" aria-label="Закрыть корзину">×</button>
+      </div>
+      <div class="cart-items" id="cart-items"></div>
+      <div class="cart-empty" id="cart-empty"><span aria-hidden="true">▱</span><p>Пока здесь пусто.<br />Самое время это исправить.</p></div>
+      <div class="cart-summary" id="cart-summary" hidden>
+        <div class="total-row"><span>Сумма заявки</span><strong id="cart-total">0,00 €</strong></div>
+        <p class="delivery-note">Менеджер подтвердит заявку и согласует разрешённое место передачи.</p>
+        <button class="checkout-button" id="checkout-button" type="button">Отправить заявку <span>↗</span></button>
+      </div>
+    </aside>
+
+    <dialog class="checkout-dialog" id="checkout-dialog" aria-labelledby="checkout-title">
+      <form method="dialog"><button class="icon-button dialog-close" aria-label="Закрыть">×</button></form>
+      <p class="eyebrow">ПОСЛЕДНИЙ ШАГ</p>
+      <h2 id="checkout-title">Способ оплаты<span>?</span></h2>
+      <p class="dialog-description">Выбери способ оплаты. Менеджер проверит заявку перед продажей.</p>
+      <label class="age-check"><input id="age-confirmed" type="checkbox" /> <span>Мне исполнилось 18 лет. Я понимаю, что менеджер проверит документы и допустимость продажи.</span></label>
+      <button class="payment-option" id="pay-card" type="button" disabled><span class="payment-icon">▰</span><span><strong>Картой</strong><small>Заявка менеджеру · оплата пока не подключена</small></span><span class="option-arrow">↗</span></button>
+      <button class="payment-option" id="pay-cash" type="button" disabled><span class="payment-icon">€</span><span><strong>Наличными</strong><small>Менеджер согласует разрешённое место передачи</small></span><span class="option-arrow">↗</span></button>
+      <p class="secure-note">Заявка не подтверждает продажу. Не оплачивай и не забирай заказ до подтверждения менеджера.</p>
+    </dialog>
+
+    <dialog class="review-dialog" id="review-dialog" aria-labelledby="review-title">
+      <form method="dialog"><button class="icon-button dialog-close" aria-label="Закрыть">×</button></form>
+      <p class="eyebrow">ОТЗЫВ DRAGONSHOP</p>
+      <h2 id="review-title">Ваше мнение<span>.</span></h2>
+      <p class="dialog-description">Выберите оценку и напишите пару слов. Отзыв будет отправлен в группу отзывов.</p>
+      <div class="rating-picker" role="group" aria-label="Оценка от 1 до 5">
+        <button type="button" data-rating="1" aria-label="1 из 5" aria-pressed="false">★</button>
+        <button type="button" data-rating="2" aria-label="2 из 5" aria-pressed="false">★</button>
+        <button type="button" data-rating="3" aria-label="3 из 5" aria-pressed="false">★</button>
+        <button type="button" data-rating="4" aria-label="4 из 5" aria-pressed="false">★</button>
+        <button type="button" data-rating="5" aria-label="5 из 5" aria-pressed="false">★</button>
+      </div>
+      <label class="review-label" for="review-text">Ваш отзыв</label>
+      <textarea id="review-text" maxlength="700" rows="5" placeholder="Что понравилось или что можно улучшить?"></textarea>
+      <div class="review-meta"><span>Текст будет отправлен в закрытую группу отзывов.</span><span><b id="review-length">0</b>/700</span></div>
+      <button class="review-submit" id="send-review" type="button">Отправить отзыв <span>↗</span></button>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
