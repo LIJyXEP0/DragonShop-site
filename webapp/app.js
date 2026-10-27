@@ -70,12 +70,10 @@ function renderProducts() {
     : "В этом диапазоне товаров нет.";
 
   byId("product-grid").innerHTML = visibleProducts.map((product) => {
-    const index = PRODUCTS.indexOf(product);
     return `
     <article class="product-card">
       <div class="product-visual">
         <img class="product-image" src="${product.image}" alt="${product.name}" loading="lazy" />
-        <span class="product-index">${String(index + 1).padStart(2, "0")} / ${String(PRODUCTS.length).padStart(2, "0")}</span>
       </div>
       <div class="product-info">
         <div><p class="product-name">${product.name}</p></div>
