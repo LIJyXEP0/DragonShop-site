@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=20261027-10" />
+    <link rel="stylesheet" href="style.css?v=20261028-admin2" />
     <script src="https://telegram.org/js/telegram-web-app.js?64"></script>
-    <script src="app.js?v=20261028-1" defer></script>
+    <script src="app.js?v=20261028-admin2" defer></script>
   </head>
   <body>
     <div class="app-shell">
@@ -21,6 +21,7 @@
           <span class="brand-mark" aria-hidden="true"><img src="images/dragonshop-logo.jpg" alt="" /></span>
           <span>DRAGON<span class="brand-accent">SHOP</span></span>
         </a>
+        <button class="admin-trigger" id="admin-trigger" type="button" hidden>Управление</button>
         <button class="cart-trigger" id="open-cart" type="button" aria-label="Открыть корзину">
           <span class="cart-icon" aria-hidden="true">▱</span>
           <span class="cart-label">Корзина</span>
@@ -153,5 +154,48 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <dialog class="admin-dialog" id="admin-dialog" aria-labelledby="admin-title">
+      <div class="admin-dialog-heading">
+        <div><p class="eyebrow">ТОЛЬКО ВЛАДЕЛЕЦ</p><h2 id="admin-title">Каталог<span>.</span></h2></div>
+        <form method="dialog"><button class="icon-button" aria-label="Закрыть панель">×</button></form>
+      </div>
+      <section id="admin-products-view">
+        <div class="admin-toolbar">
+          <input id="admin-search" type="search" placeholder="Найти товар" aria-label="Найти товар" />
+          <button class="admin-primary" id="admin-add-product" type="button">+ Новый товар</button>
+        </div>
+        <div class="admin-products" id="admin-products"></div>
+        <p class="admin-empty" id="admin-empty" hidden>Ничего не найдено.</p>
+        <p class="admin-hint">Скрытые товары не видны покупателям. Изменения сразу обновляют каталог и цены в заявках.</p>
+      </section>
+      <section id="admin-editor-view" hidden>
+        <h3 class="admin-editor-title" id="admin-editor-title">Новый товар</h3>
+        <p class="admin-id-note">Системный ID: <code id="admin-product-id-label"></code></p>
+        <form id="admin-product-form">
+          <input id="admin-product-id" type="hidden" />
+          <input id="admin-image-url" type="hidden" />
+          <label class="admin-field">Название товара
+            <input id="admin-name" type="text" minlength="2" maxlength="80" required placeholder="Например, новый товар" />
+          </label>
+          <label class="admin-field">Цена, евро
+            <input id="admin-price" type="number" min="0.01" max="9999.99" step="0.01" inputmode="decimal" required placeholder="0,00" />
+          </label>
+          <label class="admin-field">Короткое описание <span>необязательно, до 240 символов</span>
+            <textarea id="admin-description" maxlength="240" rows="2" placeholder="Отображается под названием"></textarea>
+          </label>
+          <label class="admin-field">Фото товара
+            <input id="admin-image-file" type="file" accept="image/webp,image/png,image/jpeg,.webp,.png,.jpg,.jpeg" />
+            <span class="admin-file-hint">WebP, PNG или JPG · до 5 МБ · фото автоматически подгоняется под каталог</span>
+          </label>
+          <img class="admin-image-preview" id="admin-image-preview" alt="Предпросмотр фото" hidden />
+          <label class="admin-active-toggle"><input id="admin-active" type="checkbox" checked /> Показывать товар в каталоге</label>
+          <div class="admin-form-actions">
+            <button class="admin-secondary" id="admin-cancel-edit" type="button">Назад к каталогу</button>
+            <button class="admin-primary" id="admin-save-product" type="submit">Сохранить товар</button>
+          </div>
+        </form>
+      </section>
+    </dialog>
   </body>
 </html>
