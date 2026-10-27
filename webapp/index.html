@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=20261027-8" />
+    <link rel="stylesheet" href="style.css?v=20261027-9" />
     <script src="https://telegram.org/js/telegram-web-app.js?64"></script>
-    <script src="app.js?v=20261027-8" defer></script>
+    <script src="app.js?v=20261027-9" defer></script>
   </head>
   <body>
     <div class="app-shell">
@@ -40,16 +40,27 @@
             <div class="hero-orbit orbit-one"></div>
             <div class="hero-orbit orbit-two"></div>
             <div class="hero-web"></div>
-            <div class="hero-dragon">龍</div>
             <div class="hero-emblem">
               <img class="hero-logo" src="images/dragonshop-logo.jpg" alt="" />
               <span class="emblem-star">✦</span>
             </div>
-            <div class="hanging-pumpkin" aria-hidden="true">
-              <svg class="hanging-web" viewBox="0 0 88 92" fill="none">
-                <path d="M44 0v70M44 12 7 55M44 12l37 43M44 27 18 57M44 27l26 30M44 42 29 58M44 42l15 16M10 52q34 12 68 0M17 40q27 10 54 0M27 27q17 7 34 0" />
+            <div class="hanging-ornament" aria-hidden="true">
+              <svg class="hanging-illustration" viewBox="0 0 120 165" fill="none">
+                <defs>
+                  <linearGradient id="pumpkin-fill" x1="24" y1="103" x2="94" y2="151" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#ffb44f" />
+                    <stop offset="1" stop-color="#ef6b27" />
+                  </linearGradient>
+                </defs>
+                <g class="web-lines">
+                  <path d="M60 0v17M60 17 13 72M60 17l47 55M60 17 30 77M60 17l30 60M60 17v67M17 67q43 22 86 0M25 54q35 18 70 0M37 39q23 12 46 0" />
+                  <path d="M60 81v13" />
+                </g>
+                <path class="pumpkin-stem" d="M59 105c-5-8-2-14 6-19 0 7 4 11 2 17l-8 2Z" />
+                <path class="pumpkin-body" d="M60 101c-8-8-18-7-24 1-11-3-19 5-19 17 0 18 17 31 43 34 26-3 43-16 43-34 0-12-8-20-19-17-6-8-16-9-24-1Z" />
+                <path class="pumpkin-ribs" d="M60 101c-7 10-8 34 0 52m-24-51c-7 10-6 31 4 47m44-47c7 10 6 31-4 47" />
+                <path class="pumpkin-face" d="m40 119 8-5 2 9-10-4Zm30 4 2-9 8 5-10 4Zm-16 9 6 3 6-3-2 7-4 3-4-3-2-7Z" />
               </svg>
-              <span>🎃</span>
             </div>
             <span class="hero-number">11</span>
           </div>
