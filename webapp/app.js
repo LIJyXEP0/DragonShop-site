@@ -1,15 +1,15 @@
 const PRODUCTS = [
-  { id: "dumbum-2g-p5du13", name: "Dumbum 2G+ P5DU13", priceCents: 1200, image: "images/dumbum-2g-p5du13.webp" },
-  { id: "rc3-pxp203", name: "RC3 PXP203", priceCents: 700, image: "images/rc3-pxp203.webp" },
-  { id: "dumbum-micro-p2d", name: "Dumbum Micro P2D", priceCents: 500, image: "images/dumbum-micro-p2d.webp" },
-  { id: "dumbum-middle-red-p6a13", name: "Dumbum Middle P6A13(R)", priceCents: 1800, image: "images/dumbum-middle-red-p6a13.webp" },
-  { id: "fp3-small-jc05", name: "FP3 Small JC05", priceCents: 1200, image: "images/fp3-small-jc05.webp" },
+  { id: "dumbum-2g-p5du13", name: "Dumbum", priceCents: 1200, image: "images/dumbum-2g-p5du13.webp" },
+  { id: "rc3-pxp203", name: "RC3", priceCents: 700, image: "images/rc3-pxp203.webp" },
+  { id: "dumbum-micro-p2d", name: "Dumbum Micro", priceCents: 500, image: "images/dumbum-micro-p2d.webp" },
+  { id: "dumbum-middle-red-p6a13", name: "Dumbum Middle(R)", priceCents: 1800, image: "images/dumbum-middle-red-p6a13.webp" },
+  { id: "fp3-small-jc05", name: "FP3 Small", priceCents: 1200, image: "images/fp3-small-jc05.webp" },
   { id: "tp2l", name: "TP2L", priceCents: 1300, image: "images/tp2l.webp" },
-  { id: "viper-black-p5d13", name: "Viper Black P5D13", priceCents: 1500, image: "images/viper-black-p5d13.webp" },
-  { id: "zombum-original-zb101", name: "Zom Bum Original ZB101", priceCents: 1200, image: "images/zombum-original-zb101.webp" },
-  { id: "zb600-zombie-attack", name: "ZB600 ZOMBIE ATTACK 5G", priceCents: 2500, image: "images/zb600-zombie-attack.webp" },
-  { id: "rc1-pxp201", name: "RC1 PXP201", priceCents: 400, image: "images/rc1-pxp201.webp" },
-  { id: "dumbum-middle-green-p6a13", name: "Dumbum Middle P6A13(G)", priceCents: 1800, image: "images/dumbum-middle-green-p6a13.webp" },
+  { id: "viper-black-p5d13", name: "Viper Black", priceCents: 1500, image: "images/viper-black-p5d13.webp" },
+  { id: "zombum-original-zb101", name: "Zom Bum", priceCents: 1200, image: "images/zombum-original-zb101.webp" },
+  { id: "zb600-zombie-attack", name: "ZOMBIE ATTACK 5G", priceCents: 2500, image: "images/zb600-zombie-attack.webp" },
+  { id: "rc1-pxp201", name: "RC1", priceCents: 400, image: "images/rc1-pxp201.webp" },
+  { id: "dumbum-middle-green-p6a13", name: "Dumbum Middle(G)", priceCents: 1800, image: "images/dumbum-middle-green-p6a13.webp" },
 ];
 
 const tg = window.Telegram?.WebApp;
