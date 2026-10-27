@@ -43,17 +43,8 @@ h1 span, .section-heading h2 span, .drawer-heading h2 span, .checkout-dialog h2 
 .hero-logo { width: 100%; height: 100%; border: 1px solid rgba(255,255,255,.08); border-radius: 50%; object-fit: cover; box-shadow: inset 0 0 28px #000; }
 .emblem-label { position: absolute; z-index: 2; bottom: 13px; left: 50%; padding: 5px 9px; border: 1px solid rgba(255,159,67,.38); border-radius: 999px; background: rgba(12,9,11,.9); color: var(--accent); font-size: 7px; font-weight: 800; letter-spacing: .17em; white-space: nowrap; transform: translateX(-50%) rotate(4deg); }
 .emblem-star { position: absolute; z-index: 2; top: 11%; right: 11%; color: var(--accent-cool); font-size: 21px; text-shadow: 0 0 18px rgba(181,140,255,.8); }
-.hero-web { position: absolute; z-index: 1; top: 3%; left: 7%; width: 110px; height: 110px; border-radius: 50%; background: repeating-conic-gradient(rgba(181,140,255,.22) 0deg 1deg, transparent 1deg 30deg), repeating-radial-gradient(circle, transparent 0 15px, rgba(181,140,255,.2) 16px 17px); opacity: .48; -webkit-mask-image: radial-gradient(circle, #000 0 20%, transparent 72%); mask-image: radial-gradient(circle, #000 0 20%, transparent 72%); }
 .hero-orbit { position: absolute; width: 360px; height: 360px; border: 1px solid rgba(255,159,67,.25); border-radius: 50%; transform: rotate(-28deg) scaleY(.45); }
 .orbit-two { width: 430px; height: 430px; border-color: rgba(181,140,255,.16); transform: rotate(32deg) scaleY(.44); }
-.hanging-ornament { position: absolute; z-index: 2; top: 0; right: 2%; width: 78px; transform-origin: top center; animation: web-pumpkin-sway 5.5s ease-in-out infinite; pointer-events: none; }
-.hanging-illustration { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 5px 10px rgba(0,0,0,.32)); }
-.web-lines { stroke: rgba(205,178,255,.72); stroke-width: 1.25; stroke-linecap: round; }
-.pumpkin-stem { fill: #657344; stroke: #38402b; stroke-width: 1.2; stroke-linejoin: round; }
-.pumpkin-body { fill: url(#pumpkin-fill); stroke: #c94e20; stroke-width: 1.5; stroke-linejoin: round; }
-.pumpkin-ribs { stroke: rgba(193,73,31,.72); stroke-width: 1.6; stroke-linecap: round; }
-.pumpkin-face { fill: #55231c; stroke: #7d321d; stroke-width: .7; stroke-linejoin: round; }
-@keyframes web-pumpkin-sway { 0%, 100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(5px) rotate(1.5deg); } }
 .hero-number { position: absolute; bottom: 14%; right: 8%; color: rgba(255,159,67,.18); font-size: 52px; font-weight: 800; letter-spacing: -.08em; }
 .hero-bottom { position: absolute; bottom: 17px; left: 0; right: 0; display: flex; justify-content: space-between; color: var(--muted); font-size: 8px; font-weight: 700; letter-spacing: .16em; }
 .section-wrap { padding-left: 0; padding-right: 0; }
@@ -101,9 +92,12 @@ h1 span, .section-heading h2 span, .drawer-heading h2 span, .checkout-dialog h2 
 .product-info { display: flex; min-height: 42px; align-items: start; justify-content: space-between; gap: 8px; padding-top: 12px; }
 .product-name { margin: 0 0 5px; font-size: 12px; font-weight: 700; }
 .product-price { white-space: nowrap; color: var(--accent); font-size: 11px; font-weight: 800; }
-.add-button { width: 100%; margin-top: auto; padding: 10px 12px; border: 1px solid var(--line); background: transparent; text-align: left; font-size: 10px; font-weight: 700; cursor: pointer; transition: .2s ease; }
+.add-button { width: 100%; margin-top: auto; padding: 10px 12px; border: 1px solid var(--line); background: transparent; text-align: left; font-size: 10px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: border-color .12s ease, background-color .12s ease, transform .12s ease; }
 .add-button span { float: right; color: var(--accent); font-size: 15px; line-height: 12px; }
-.add-button:hover { border-color: var(--accent); background: rgba(255,159,67,.07); }
+.add-button:active { border-color: var(--accent); background: rgba(255,159,67,.07); transform: scale(.985); }
+@media (hover: hover) and (pointer: fine) {
+  .add-button:hover { border-color: var(--accent); background: rgba(255,159,67,.07); }
+}
 .city-note { position: relative; display: flex; align-items: center; justify-content: center; min-height: 190px; margin-top: 76px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); text-align: center; }
 .city-mark { position: absolute; left: 0; color: rgba(255,159,67,.14); font-size: 68px; font-weight: 800; letter-spacing: -.12em; }
 .city-note p { margin: 0; font-size: 26px; font-weight: 500; line-height: 1.35; letter-spacing: -.06em; }
@@ -186,7 +180,6 @@ body.dialog-open { overflow: hidden; }
   .hero-copy { padding-top: 65px; }
   .hero-art { width: 70%; opacity: .72; }
   .hero-emblem { display: none; }
-  .hero-web { top: 8%; left: 0; width: 78px; height: 78px; }
   .hero-number { bottom: 20%; }
   .hero-description { max-width: 230px; }
   .catalog { padding-top: 48px; }
@@ -219,7 +212,4 @@ body.dialog-open { overflow: hidden; }
   .price-inputs { gap: 4px; }
   .price-field input { width: 35px; }
   .cart-drawer { padding: 22px 18px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hanging-ornament { animation: none; }
 }
