@@ -3,6 +3,19 @@ let PRODUCTS = [];
 const tg = window.Telegram?.WebApp;
 // Public HTTPS API on the DragonShop VM; the bot validates Telegram initData server-side.
 const API_BASE_URL = "https://129.151.199.231";
+const PRODUCT_VIDEO_IDS = new Set([
+  "dumbum-2g-p5du13",
+  "dumbum-micro-p2d",
+  "dumbum-middle-green-p6a13",
+  "dumbum-middle-red-p6a13",
+  "fp3-small-jc05",
+  "rc1-pxp201",
+  "rc3-pxp203",
+  "tp2l",
+  "viper-black-p5d13",
+  "zb600-zombie-attack",
+  "zombum-original-zb101",
+]);
 const money = (cents) => new Intl.NumberFormat("ru-LV", { style: "currency", currency: "EUR" }).format(cents / 100);
 const byId = (id) => document.getElementById(id);
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
@@ -91,7 +104,29 @@ function renderProductDetail(product) {
   byId("detail-description").textContent = product.description?.trim()
     || "Подробности о товаре можно уточнить у менеджера.";
   byId("detail-add-to-cart").dataset.add = product.id;
+
+  const videoDetails = byId("detail-video");
+  const videoPlayer = byId("detail-video-player");
+  const videoPath = PRODUCT_VIDEO_IDS.has(product.id) ? `videos/${product.id}.mp4` : "";
+  videoDetails.open = false;
+  videoDetails.hidden = !videoPath;
+  videoPlayer.pause();
+  videoPlayer.removeAttribute("src");
+  videoPlayer.poster = productImage(product.image);
+  videoPlayer.dataset.videoPath = videoPath;
+  videoPlayer.load();
 }
+
+byId("detail-video").addEventListener("toggle", (event) => {
+  const details = event.currentTarget;
+  const player = byId("detail-video-player");
+  if (details.open && !player.getAttribute("src")) {
+    player.src = player.dataset.videoPath;
+    player.load();
+  } else if (!details.open) {
+    player.pause();
+  }
+});
 
 function cartTotal() {
   return [...cart.entries()].reduce((sum, [id, quantity]) => {

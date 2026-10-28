@@ -131,6 +131,18 @@ h1 span, .section-heading h2 span, .drawer-heading h2 span, .checkout-dialog h2 
 .detail-note { margin: 0; color: var(--muted); font-size: 9px; line-height: 1.65; }
 .detail-add-button { margin-top: 5px; }
 .detail-manager-link { padding: 5px 0; }
+.detail-video { width: 100%; margin-top: 4px; border: 1px solid var(--line); background: rgba(255,255,255,.015); }
+.detail-video[hidden] { display: none; }
+.detail-video summary { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 9px 13px; list-style: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.detail-video summary::-webkit-details-marker { display: none; }
+.detail-video-icon { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; border: 1px solid rgba(255,159,67,.4); border-radius: 50%; color: var(--accent); font-size: 10px; }
+.detail-video-copy { display: grid; flex: 1; gap: 3px; }
+.detail-video-copy strong { font-size: 10px; }
+.detail-video-copy small { color: var(--muted); font-size: 8px; }
+.detail-video-toggle { color: var(--accent); font-size: 15px; transition: transform .2s ease; }
+.detail-video[open] .detail-video-toggle { transform: rotate(45deg); }
+.detail-video-frame { overflow: hidden; padding: 0 10px 10px; }
+.detail-video-frame video { display: block; width: 100%; max-height: min(56vw, 360px); aspect-ratio: 16 / 9; background: #080709; object-fit: contain; }
 .reviews-section { padding-top: 58px; }
 .reviews-card { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; overflow: hidden; padding: 30px 34px; border: 1px solid rgba(181,140,255,.22); background: radial-gradient(ellipse at 88% 15%, rgba(181,140,255,.12), transparent 42%), linear-gradient(120deg, rgba(255,159,67,.08), transparent 60%), var(--panel); }
 .reviews-copy { position: relative; z-index: 1; max-width: 420px; }

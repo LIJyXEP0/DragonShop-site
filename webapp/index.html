@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=20261028-products1" />
+    <link rel="stylesheet" href="style.css?v=20261028-video1" />
     <script src="https://telegram.org/js/telegram-web-app.js?64"></script>
-    <script src="app.js?v=20261028-products1" defer></script>
+    <script src="app.js?v=20261028-video1" defer></script>
   </head>
   <body>
     <div class="app-shell">
@@ -109,6 +109,16 @@
               <p class="detail-note">Перед использованием ознакомьтесь с официальной инструкцией производителя и соблюдайте указанные меры безопасности.</p>
               <button class="add-button detail-add-button" id="detail-add-to-cart" type="button">В корзину <span>+</span></button>
               <a class="detail-manager-link" href="https://t.me/DragonShopSeller" target="_blank" rel="noopener noreferrer">Задать вопрос менеджеру <span aria-hidden="true">↗</span></a>
+              <details class="detail-video" id="detail-video" hidden>
+                <summary>
+                  <span class="detail-video-icon" aria-hidden="true">▶</span>
+                  <span class="detail-video-copy"><strong>Видео товара</strong><small>По желанию · откроется по нажатию</small></span>
+                  <span class="detail-video-toggle" aria-hidden="true">＋</span>
+                </summary>
+                <div class="detail-video-frame">
+                  <video id="detail-video-player" controls playsinline preload="none"></video>
+                </div>
+              </details>
             </div>
           </div>
         </section>
