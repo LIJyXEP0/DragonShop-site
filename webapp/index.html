@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=20261028-admin2" />
+    <link rel="stylesheet" href="style.css?v=20261028-products1" />
     <script src="https://telegram.org/js/telegram-web-app.js?64"></script>
-    <script src="app.js?v=20261028-admin2" defer></script>
+    <script src="app.js?v=20261028-products1" defer></script>
   </head>
   <body>
     <div class="app-shell">
@@ -30,7 +30,7 @@
       </header>
 
       <main id="top">
-        <section class="hero" aria-labelledby="hero-title">
+        <section class="hero route-section" aria-labelledby="hero-title">
           <div class="hero-copy">
             <p class="eyebrow"><span class="status-dot"></span> АССОРТИМЕНТ · DAUGAVPILS</p>
             <h1 id="hero-title">Выбери<br /><span>своё</span></h1>
@@ -44,15 +44,21 @@
               <img class="hero-logo" src="images/dragonshop-logo.jpg" alt="" />
               <span class="emblem-star">✦</span>
             </div>
-            <span class="hero-number">11</span>
+            <span class="hero-number" id="catalog-count-mark">11</span>
           </div>
           <div class="hero-bottom"><span>ЗАЯВКА МЕНЕДЖЕРУ</span><span>LV</span></div>
         </section>
 
-        <section class="catalog section-wrap" id="catalog" aria-labelledby="catalog-title">
+        <section class="catalog section-wrap route-section" id="catalog" aria-labelledby="catalog-title">
           <div class="section-heading">
             <div><p class="eyebrow">КАТАЛОГ</p><h2 id="catalog-title">Каталог<span>.</span></h2></div>
             <span class="product-total" id="product-total">11 / 11 ПОЗИЦИЙ</span>
+          </div>
+          <div class="order-steps" aria-label="Как оформить заявку">
+            <span><b>01</b> Выберите товар</span>
+            <span><b>02</b> Добавьте в корзину</span>
+            <span><b>03</b> Отправьте заявку</span>
+            <span><b>04</b> Менеджер подтвердит детали</span>
           </div>
           <div class="catalog-filters" aria-label="Фильтры каталога">
             <div class="filter-topline">
@@ -87,13 +93,38 @@
           </div>
         </section>
 
-        <section class="city-note section-wrap">
-          <span class="city-mark" aria-hidden="true">DS</span>
-          <p>Заявка менеджеру.<br /><strong>Передача после проверки.</strong></p>
-          <span class="city-coordinate">МЕСТО ПЕРЕДАЧИ<br />СОГЛАСУЕТ МЕНЕДЖЕР</span>
+        <section class="product-detail section-wrap" id="product-detail" aria-labelledby="detail-title" hidden>
+          <nav class="detail-breadcrumb" aria-label="Навигация по магазину">
+            <button id="back-to-catalog" type="button"><span aria-hidden="true">←</span> В каталог</button>
+            <span aria-hidden="true">/</span>
+            <span id="detail-breadcrumb-name">Товар</span>
+          </nav>
+          <div class="product-detail-layout">
+            <div class="detail-visual"><img id="detail-image" src="" alt="" /></div>
+            <div class="detail-copy">
+              <p class="eyebrow">ИНФОРМАЦИЯ О ТОВАРЕ</p>
+              <h2 id="detail-title"></h2>
+              <p class="detail-price" id="detail-price"></p>
+              <div class="detail-description" id="detail-description"></div>
+              <p class="detail-note">Перед использованием ознакомьтесь с официальной инструкцией производителя и соблюдайте указанные меры безопасности.</p>
+              <button class="add-button detail-add-button" id="detail-add-to-cart" type="button">В корзину <span>+</span></button>
+              <a class="detail-manager-link" href="https://t.me/DragonShopSeller" target="_blank" rel="noopener noreferrer">Задать вопрос менеджеру <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
         </section>
 
-        <section class="reviews-section section-wrap" aria-labelledby="reviews-title">
+        <section class="city-note section-wrap route-section">
+          <span class="city-mark" aria-hidden="true">DS</span>
+          <div class="city-copy">
+            <span class="city-kicker">ЛИЧНАЯ ВСТРЕЧА</span>
+            <p>Встреча в <strong>Daugavpils</strong></p>
+            <span class="city-description">Место и время согласуются с менеджером после отправки заявки.</span>
+            <a class="city-manager-link" href="https://t.me/DragonShopSeller" target="_blank" rel="noopener noreferrer">Связаться с менеджером <span aria-hidden="true">↗</span></a>
+          </div>
+          <span class="city-coordinate">DAUGAVPILS<br />LATVIA</span>
+        </section>
+
+        <section class="reviews-section section-wrap route-section" aria-labelledby="reviews-title">
           <div class="reviews-card">
             <div class="reviews-copy">
               <p class="eyebrow">СООБЩЕСТВО DRAGONSHOP</p>

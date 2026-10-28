@@ -63,19 +63,34 @@ function renderProducts() {
   byId("product-grid").innerHTML = visibleProducts.map((product) => {
     const image = escapeHtml(productImage(product.image));
     const name = escapeHtml(product.name);
+    const productId = escapeHtml(product.id);
     const description = product.description ? `<p class="product-description">${escapeHtml(product.description)}</p>` : "";
     return `
     <article class="product-card">
-      <div class="product-visual">
-        <img class="product-image" src="${image}" alt="${name}" loading="lazy" />
-      </div>
-      <div class="product-info">
-        <div><p class="product-name">${name}</p>${description}</div>
-        <span class="product-price">${money(product.priceCents)}</span>
-      </div>
-      <button class="add-button" type="button" data-add="${escapeHtml(product.id)}" aria-label="Добавить: ${name}">В корзину <span>+</span></button>
+      <a class="product-open" href="#product/${encodeURIComponent(product.id)}" data-product-link="${productId}" aria-label="Подробнее о товаре: ${name}">
+        <div class="product-visual">
+          <img class="product-image" src="${image}" alt="${name}" loading="lazy" />
+        </div>
+        <div class="product-info">
+          <div><p class="product-name">${name}</p>${description}</div>
+          <span class="product-price">${money(product.priceCents)}</span>
+        </div>
+        <span class="product-details-hint">Подробнее <span aria-hidden="true">↗</span></span>
+      </a>
+      <button class="add-button" type="button" data-add="${productId}" aria-label="Добавить: ${name}">В корзину <span>+</span></button>
     </article>`;
   }).join("");
+}
+
+function renderProductDetail(product) {
+  byId("detail-image").src = productImage(product.image);
+  byId("detail-image").alt = product.name;
+  byId("detail-breadcrumb-name").textContent = product.name;
+  byId("detail-title").textContent = product.name;
+  byId("detail-price").textContent = money(product.priceCents);
+  byId("detail-description").textContent = product.description?.trim()
+    || "Подробности о товаре можно уточнить у менеджера.";
+  byId("detail-add-to-cart").dataset.add = product.id;
 }
 
 function cartTotal() {
@@ -161,6 +176,7 @@ async function loadCatalog() {
     throw new Error(result.error || "Не удалось загрузить каталог.");
   }
   PRODUCTS = result.products;
+  byId("catalog-count-mark").textContent = String(PRODUCTS.length).padStart(2, "0");
   MAX_PRICE_EUROS = Math.max(1, Math.ceil(Math.max(0, ...PRODUCTS.map((product) => product.priceCents)) / 100));
   byId("price-min").max = MAX_PRICE_EUROS;
   byId("price-max").max = MAX_PRICE_EUROS;
@@ -366,10 +382,12 @@ byId("sort-price").addEventListener("change", renderProducts);
 byId("reset-filters").addEventListener("click", resetCatalogFilters);
 byId("empty-reset").addEventListener("click", resetCatalogFilters);
 
-byId("product-grid").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-add]");
-  if (!button) return;
-  const id = button.dataset.add;
+function addProductToCart(id) {
+  const product = PRODUCTS.find((item) => item.id === id);
+  if (!product) {
+    showToast("Этот товар больше не отображается в каталоге.");
+    return;
+  }
   const quantity = cart.get(id) || 0;
   if (quantity >= 20) {
     showToast("Максимум 20 единиц одного товара");
@@ -380,7 +398,20 @@ byId("product-grid").addEventListener("click", (event) => {
   renderCart();
   showToast("Добавлено в корзину");
   tg?.HapticFeedback?.selectionChanged();
+}
+
+byId("product-grid").addEventListener("click", (event) => {
+  const productLink = event.target.closest("[data-product-link]");
+  if (productLink) {
+    event.preventDefault();
+    navigateToProduct(productLink.dataset.productLink);
+    return;
+  }
+  const button = event.target.closest("[data-add]");
+  if (!button) return;
+  addProductToCart(button.dataset.add);
 });
+byId("detail-add-to-cart").addEventListener("click", (event) => addProductToCart(event.currentTarget.dataset.add));
 
 byId("cart-items").addEventListener("click", (event) => {
   const change = event.target.closest("[data-change]");
@@ -473,6 +504,63 @@ byId("checkout-dialog").addEventListener("click", (event) => {
   if (event.target === byId("checkout-dialog")) byId("checkout-dialog").close();
 });
 
+const APP_TITLE = document.title;
+const routeSections = document.querySelectorAll(".route-section");
+
+function renderRoute({ restoreScroll = true } = {}) {
+  const match = location.hash.match(/^#product\/([^/?#]+)$/);
+  let productId = null;
+  if (match) {
+    try { productId = decodeURIComponent(match[1]); }
+    catch { productId = match[1]; }
+  }
+  const product = productId ? PRODUCTS.find((item) => item.id === productId) : null;
+
+  if (productId && !product) {
+    history.replaceState({ dragonShopScrollY: 0 }, "", `${location.pathname}${location.search}#catalog`);
+    showToast("Эта позиция больше не доступна в каталоге.");
+  }
+
+  const showDetail = Boolean(product);
+  routeSections.forEach((section) => { section.hidden = showDetail; });
+  byId("product-detail").hidden = !showDetail;
+  if (showDetail) {
+    renderProductDetail(product);
+    document.title = `${product.name} — DragonShop`;
+    tg?.BackButton?.show();
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  document.title = APP_TITLE;
+  tg?.BackButton?.hide();
+  if (restoreScroll && typeof history.state?.dragonShopScrollY === "number") {
+    requestAnimationFrame(() => window.scrollTo(0, history.state.dragonShopScrollY));
+  }
+}
+
+function navigateToProduct(productId) {
+  if (!PRODUCTS.some((product) => product.id === productId)) return;
+  history.replaceState({ ...(history.state || {}), dragonShopScrollY: window.scrollY }, "", location.href);
+  history.pushState({ dragonShopProduct: true }, "", `${location.pathname}${location.search}#product/${encodeURIComponent(productId)}`);
+  renderRoute({ restoreScroll: false });
+}
+
+function backToCatalog() {
+  if (history.state?.dragonShopProduct) {
+    history.back();
+    return;
+  }
+  history.replaceState({ dragonShopScrollY: 0 }, "", `${location.pathname}${location.search}#catalog`);
+  renderRoute({ restoreScroll: false });
+  window.scrollTo(0, 0);
+}
+
+byId("back-to-catalog").addEventListener("click", backToCatalog);
+tg?.BackButton?.onClick(backToCatalog);
+window.addEventListener("popstate", () => renderRoute());
+window.addEventListener("hashchange", () => renderRoute());
+
 async function startApp() {
   if (tg) {
     tg.ready();
@@ -483,6 +571,7 @@ async function startApp() {
 
   try {
     await loadCatalog();
+    renderRoute();
     await enableAdminForOwner();
   } catch (error) {
     console.error("Could not load DragonShop catalog:", error);
