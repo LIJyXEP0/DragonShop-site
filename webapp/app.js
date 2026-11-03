@@ -395,8 +395,8 @@ adminForm.addEventListener("submit", async (event) => {
 async function submitOrder(paymentMethod) {
   const items = [...cart.entries()].map(([id, quantity]) => ({ id, quantity }));
   if (!items.length) return;
-  if (!byId("age-confirmed").checked) {
-    showToast("Подтвердите, что вам исполнилось 18 лет.");
+  if (!byId("rules-confirmed").checked) {
+    showToast("Сначала ознакомьтесь с правилами на канале.");
     return;
   }
   if (!tg?.initData) {
@@ -407,14 +407,14 @@ async function submitOrder(paymentMethod) {
   const buttons = [byId("pay-card"), byId("pay-cash")];
   buttons.forEach((button) => { button.disabled = true; });
   try {
-    await sendToBot({ type: "order", payment_method: paymentMethod, age_confirmed: true, items });
+    await sendToBot({ type: "order", payment_method: paymentMethod, rules_confirmed: true, items });
     tg.HapticFeedback?.impactOccurred("light");
     showToast("Заявка передана менеджеру");
   } catch (error) {
     showToast(error.message || "Не удалось отправить заявку. Попробуйте ещё раз.");
     return;
   } finally {
-    buttons.forEach((button) => { button.disabled = !byId("age-confirmed").checked; });
+    buttons.forEach((button) => { button.disabled = !byId("rules-confirmed").checked; });
   }
 
   cart.clear();
@@ -573,12 +573,12 @@ byId("overlay").addEventListener("click", () => setCartOpen(false));
 byId("checkout-button").addEventListener("click", () => byId("checkout-dialog").showModal());
 byId("pay-card").addEventListener("click", () => submitOrder("card"));
 byId("pay-cash").addEventListener("click", () => submitOrder("cash"));
-byId("age-confirmed").addEventListener("change", (event) => {
+byId("rules-confirmed").addEventListener("change", (event) => {
   byId("pay-card").disabled = !event.target.checked;
   byId("pay-cash").disabled = !event.target.checked;
 });
 byId("checkout-dialog").addEventListener("close", () => {
-  byId("age-confirmed").checked = false;
+  byId("rules-confirmed").checked = false;
   byId("pay-card").disabled = true;
   byId("pay-cash").disabled = true;
 });

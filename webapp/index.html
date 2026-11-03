@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css?v=20261103-rulescheck" />
     <script src="https://telegram.org/js/telegram-web-app.js?64"></script>
-    <script src="app.js?v=20261103-rulescheck" defer></script>
+    <script src="app.js?v=20261103-rulesonly" defer></script>
   </head>
   <body>
     <div class="app-shell">
@@ -167,14 +167,13 @@
 
     <dialog class="checkout-dialog" id="checkout-dialog" aria-labelledby="checkout-title">
       <form method="dialog"><button class="icon-button dialog-close" aria-label="Закрыть">×</button></form>
-      <p class="eyebrow">ПОСЛЕДНИЙ ШАГ</p>
+      <p class="eyebrow">ПЕРЕД ОТПРАВКОЙ ЗАЯВКИ</p>
       <h2 id="checkout-title">Способ оплаты<span>?</span></h2>
       <p class="dialog-description">Выбери способ оплаты. Менеджер проверит заявку перед продажей.</p>
-      <label class="age-check">
-        <input id="age-confirmed" type="checkbox" />
+      <label class="age-check rules-check">
+        <input id="rules-confirmed" type="checkbox" />
         <span class="age-check-content">
-          <span class="age-check-title">Перед отправкой заявки</span>
-          <span class="age-check-text"><a href="https://t.me/+5J1QPjCvbcE5ZjJk" target="_blank" rel="noopener noreferrer">Я ознакомился с правилами на канале</a> и подтверждаю, что мне исполнилось 18 лет. Менеджер проверит документы и допустимость продажи.</span>
+          <span class="age-check-text"><a href="https://t.me/+5J1QPjCvbcE5ZjJk" target="_blank" rel="noopener noreferrer">Я ознакомился с правилами на канале.</a></span>
         </span>
       </label>
       <button class="payment-option" id="pay-card" type="button" disabled><span class="payment-icon">▰</span><span><strong>Картой</strong><small>Заявка менеджеру · оплата пока не подключена</small></span><span class="option-arrow">↗</span></button>
