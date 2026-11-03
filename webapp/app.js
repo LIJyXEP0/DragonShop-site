@@ -3,21 +3,9 @@ let PRODUCTS = [];
 const tg = window.Telegram?.WebApp;
 // Public HTTPS API on the DragonShop VM; the bot validates Telegram initData server-side.
 const API_BASE_URL = "https://129.151.199.231";
-const PRODUCT_VIDEO_IDS = new Set([
-  "dumbum-2g-p5du13",
-  "dumbum-micro-p2d",
-  "dumbum-middle-green-p6a13",
-  "dumbum-middle-red-p6a13",
-  "fp3-small-jc05",
-  "rc1-pxp201",
-  "rc3-pxp203",
-  "tp2l",
-  "viper-black-p5d13",
-  "zb600-zombie-attack",
-  "zombum-original-zb101",
-]);
 const money = (cents) => new Intl.NumberFormat("ru-LV", { style: "currency", currency: "EUR" }).format(cents / 100);
 const byId = (id) => document.getElementById(id);
+const productVideo = (video) => video.startsWith("/media/") ? `${API_BASE_URL}${video}` : video;
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
 }[char]));
@@ -107,7 +95,7 @@ function renderProductDetail(product) {
 
   const videoDetails = byId("detail-video");
   const videoPlayer = byId("detail-video-player");
-  const videoPath = PRODUCT_VIDEO_IDS.has(product.id) ? `videos/${product.id}.mp4` : "";
+  const videoPath = product.video ? productVideo(product.video) : "";
   videoDetails.open = false;
   videoDetails.hidden = !videoPath;
   videoPlayer.pause();
@@ -239,6 +227,26 @@ async function enableAdminForOwner() {
 
 const adminDialog = byId("admin-dialog");
 const adminForm = byId("admin-product-form");
+const MAX_ADMIN_VIDEO_BYTES = 64 * 1024 * 1024;
+let adminVideoPreviewUrl = "";
+
+function clearAdminVideoPreview() {
+  const preview = byId("admin-video-preview");
+  preview.pause();
+  preview.removeAttribute("src");
+  preview.load();
+  if (adminVideoPreviewUrl) URL.revokeObjectURL(adminVideoPreviewUrl);
+  adminVideoPreviewUrl = "";
+  byId("admin-video-manager").hidden = true;
+}
+
+function setAdminVideoPreview(url, localFile = false) {
+  clearAdminVideoPreview();
+  const preview = byId("admin-video-preview");
+  preview.src = url;
+  byId("admin-video-manager").hidden = false;
+  if (localFile) adminVideoPreviewUrl = url;
+}
 
 function renderAdminList() {
   const filter = byId("admin-search").value.trim().toLocaleLowerCase("ru");
@@ -264,6 +272,11 @@ function showAdminEditor(product = null) {
   byId("admin-active").checked = product ? product.active : true;
   byId("admin-image-url").value = product?.image || "";
   byId("admin-image-file").value = "";
+  byId("admin-video-url").value = product?.video || "";
+  byId("admin-video-file").value = "";
+  byId("admin-video-remove-note").hidden = true;
+  clearAdminVideoPreview();
+  if (product?.video) setAdminVideoPreview(productVideo(product.video));
   byId("admin-editor-title").textContent = product ? "Изменить товар" : "Новый товар";
   byId("admin-product-id-label").textContent = product ? product.id : "ID будет создан автоматически";
   const preview = byId("admin-image-preview");
@@ -274,6 +287,7 @@ function showAdminEditor(product = null) {
 }
 
 function showAdminProducts() {
+  clearAdminVideoPreview();
   byId("admin-editor-view").hidden = true;
   byId("admin-products-view").hidden = false;
   renderAdminList();
@@ -305,6 +319,30 @@ byId("admin-image-file").addEventListener("change", () => {
   preview.hidden = false;
 });
 
+byId("admin-video-file").addEventListener("change", () => {
+  const file = byId("admin-video-file").files?.[0];
+  if (!file) return;
+  if (!file.name.toLowerCase().endsWith(".mp4")) {
+    byId("admin-video-file").value = "";
+    showToast("Выберите видео в формате MP4.");
+    return;
+  }
+  if (file.size > MAX_ADMIN_VIDEO_BYTES) {
+    byId("admin-video-file").value = "";
+    showToast("Видео должно быть не больше 64 МБ.");
+    return;
+  }
+  byId("admin-video-remove-note").hidden = true;
+  setAdminVideoPreview(URL.createObjectURL(file), true);
+});
+
+byId("admin-video-remove").addEventListener("click", () => {
+  byId("admin-video-url").value = "";
+  byId("admin-video-file").value = "";
+  clearAdminVideoPreview();
+  byId("admin-video-remove-note").hidden = false;
+});
+
 adminForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const saveButton = byId("admin-save-product");
@@ -312,12 +350,20 @@ adminForm.addEventListener("submit", async (event) => {
   saveButton.textContent = "Сохраняю…";
   try {
     let image = byId("admin-image-url").value;
+    let video = byId("admin-video-url").value;
     const file = byId("admin-image-file").files?.[0];
+    const videoFile = byId("admin-video-file").files?.[0];
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
       const uploaded = await apiRequest("/api/admin/upload", { method: "POST", formData });
       image = uploaded.image;
+    }
+    if (videoFile) {
+      const formData = new FormData();
+      formData.append("file", videoFile);
+      const uploaded = await apiRequest("/api/admin/upload-video", { method: "POST", formData });
+      video = uploaded.video;
     }
     const price = Number(byId("admin-price").value);
     const saved = await apiRequest("/api/admin/catalog", {
@@ -328,6 +374,7 @@ adminForm.addEventListener("submit", async (event) => {
         priceCents: Math.round(price * 100),
         description: byId("admin-description").value,
         image,
+        video,
         active: byId("admin-active").checked,
       },
     });

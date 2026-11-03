@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=20261028-video1" />
+    <link rel="stylesheet" href="style.css?v=20261103-rulescheck" />
     <script src="https://telegram.org/js/telegram-web-app.js?64"></script>
-    <script src="app.js?v=20261028-video1" defer></script>
+    <script src="app.js?v=20261103-rulescheck" defer></script>
   </head>
   <body>
     <div class="app-shell">
@@ -170,7 +170,13 @@
       <p class="eyebrow">ПОСЛЕДНИЙ ШАГ</p>
       <h2 id="checkout-title">Способ оплаты<span>?</span></h2>
       <p class="dialog-description">Выбери способ оплаты. Менеджер проверит заявку перед продажей.</p>
-      <label class="age-check"><input id="age-confirmed" type="checkbox" /> <span>Мне исполнилось 18 лет. Я понимаю, что менеджер проверит документы и допустимость продажи.</span></label>
+      <label class="age-check">
+        <input id="age-confirmed" type="checkbox" />
+        <span class="age-check-content">
+          <span class="age-check-title">Перед отправкой заявки</span>
+          <span class="age-check-text"><a href="https://t.me/+5J1QPjCvbcE5ZjJk" target="_blank" rel="noopener noreferrer">Я ознакомился с правилами на канале</a> и подтверждаю, что мне исполнилось 18 лет. Менеджер проверит документы и допустимость продажи.</span>
+        </span>
+      </label>
       <button class="payment-option" id="pay-card" type="button" disabled><span class="payment-icon">▰</span><span><strong>Картой</strong><small>Заявка менеджеру · оплата пока не подключена</small></span><span class="option-arrow">↗</span></button>
       <button class="payment-option" id="pay-cash" type="button" disabled><span class="payment-icon">€</span><span><strong>Наличными</strong><small>Менеджер согласует разрешённое место передачи</small></span><span class="option-arrow">↗</span></button>
       <p class="secure-note">Заявка не подтверждает продажу. Не оплачивай и не забирай заказ до подтверждения менеджера.</p>
@@ -216,6 +222,7 @@
         <form id="admin-product-form">
           <input id="admin-product-id" type="hidden" />
           <input id="admin-image-url" type="hidden" />
+          <input id="admin-video-url" type="hidden" />
           <label class="admin-field">Название товара
             <input id="admin-name" type="text" minlength="2" maxlength="80" required placeholder="Например, новый товар" />
           </label>
@@ -230,6 +237,15 @@
             <span class="admin-file-hint">WebP, PNG или JPG · до 5 МБ · фото автоматически подгоняется под каталог</span>
           </label>
           <img class="admin-image-preview" id="admin-image-preview" alt="Предпросмотр фото" hidden />
+          <label class="admin-field">Видео товара
+            <input id="admin-video-file" type="file" accept="video/mp4,.mp4" />
+            <span class="admin-file-hint">MP4 · до 64 МБ · видео необязательно, воспроизводится только по нажатию</span>
+          </label>
+          <div class="admin-video-manager" id="admin-video-manager" hidden>
+            <video id="admin-video-preview" controls playsinline preload="none"></video>
+            <button class="admin-remove-video" id="admin-video-remove" type="button">Убрать видео из карточки</button>
+          </div>
+          <p class="admin-video-remove-note" id="admin-video-remove-note" hidden>Видео будет удалено после сохранения товара.</p>
           <label class="admin-active-toggle"><input id="admin-active" type="checkbox" checked /> Показывать товар в каталоге</label>
           <div class="admin-form-actions">
             <button class="admin-secondary" id="admin-cancel-edit" type="button">Назад к каталогу</button>
